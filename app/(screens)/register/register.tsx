@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyledInput, StyledText, StyledView } from '@/components/styled.tsx';
 import { Link } from 'expo-router';
 
-export default function SignIn() {
+export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -11,7 +11,7 @@ export default function SignIn() {
         <StyledView>
             <StyledText
                 type='title'
-                text='Sign In'
+                text='Register'
             />
             <StyledInput
                 value={email}
@@ -32,14 +32,14 @@ export default function SignIn() {
             <View className='flex flex-row mt-4 justify-center'>
                 <StyledText
                     type=''
-                    text='Don’t have an account?'
+                    text='Already had an account?'
                 />
                 <Link
                     push
-                    href={'/(screens)/register'}
+                    href={'/(screens)/sign_in'}
                     className='text-blue-700 ml-1'
                 >
-                    Register
+                    Sign In
                 </Link>
             </View>
         </StyledView>

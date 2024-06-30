@@ -36,6 +36,10 @@ export default function RootLayout() {
         >
             <Stack>
                 <Stack.Screen
+                    name='(screens)/register'
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
                     name='(screens)/sign_in'
                     options={{ headerShown: false }}
                 />

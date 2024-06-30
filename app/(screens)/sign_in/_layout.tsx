@@ -1,12 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import SignIn from './sign_in';
+import { StyledView } from '@/components/styled.tsx';
 
 export default function Layout() {
-    return (
-        <View >
-            <SignIn />
-        </View>
-    );
+    return <SignIn />;
 }
-
