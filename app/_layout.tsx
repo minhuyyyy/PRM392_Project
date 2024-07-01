@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { CartProvider } from '@/contexts/cart-context';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,21 +35,31 @@ export default function RootLayout() {
         <ThemeProvider
             value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
         >
-            <Stack>
-                <Stack.Screen
-                    name='(screens)/register'
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                    name='(screens)/sign_in'
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                    name='(tabs)'
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen name='+not-found' />
-            </Stack>
+            <CartProvider>
+                <Stack>
+                    <Stack.Screen
+                        name='(screens)/cart'
+                        options={{ headerTitle: 'Cart' }}
+                    />
+                    <Stack.Screen
+                        name='(screens)/artwork'
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name='(screens)/register'
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name='(screens)/sign_in'
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name='(tabs)'
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name='+not-found' />
+                </Stack>
+            </CartProvider>
         </ThemeProvider>
     );
 }

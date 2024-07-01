@@ -1,18 +1,21 @@
+import { View, Text, Pressable } from 'react-native';
 import React from 'react';
-import { StyledComponent, styled } from 'nativewind';
-import { SafeAreaView } from 'react-native';
+import { StyledComponent } from 'nativewind';
 
-export default function StyledView({
+export default function StyledPressable({
     children,
     classname,
+    onPress,
 }: {
     children: React.ReactNode;
     classname?: string;
+    onPress: () => void;
 }) {
     return (
         <StyledComponent
-            component={SafeAreaView}
+            component={Pressable}
             className={classname}
+            onPress={onPress}
         >
             {children}
         </StyledComponent>

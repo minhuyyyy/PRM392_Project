@@ -1,4 +1,4 @@
-import { Button, View } from 'react-native';
+import { Button } from 'react-native';
 import React, { useState } from 'react';
 import { StyledInput, StyledText, StyledView } from '@/components/styled.tsx';
 import { Link } from 'expo-router';
@@ -8,10 +8,10 @@ export default function Register() {
     const [password, setPassword] = useState('');
 
     return (
-        <StyledView>
+        <StyledView classname='flex-1 justify-center mx-10'>
             <StyledText
-                type='title'
                 text='Register'
+                classname='font-semibold text-2xl'
             />
             <StyledInput
                 value={email}
@@ -29,11 +29,8 @@ export default function Register() {
                     /* Handle sign in */
                 }}
             />
-            <View className='flex flex-row mt-4 justify-center'>
-                <StyledText
-                    type=''
-                    text='Already had an account?'
-                />
+            <StyledView classname='flex flex-row mt-4 justify-center'>
+                <StyledText text='Already had an account?' />
                 <Link
                     push
                     href={'/(screens)/sign_in'}
@@ -41,7 +38,7 @@ export default function Register() {
                 >
                     Sign In
                 </Link>
-            </View>
+            </StyledView>
         </StyledView>
     );
 }
