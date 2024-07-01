@@ -3,18 +3,17 @@ import React from 'react';
 import { StyledComponent } from 'nativewind';
 
 export default function StyledText({
-    type,
     text,
+    classname,
 }: {
-    className?: string;
+    classname?: string;
     text: string;
-    type: string;
 }) {
     return (
         <>
             <StyledComponent
                 component={Text}
-                className={type === 'title' ? 'text-2xl font-semibold' : '' }
+                className={classname}
             >
                 {text}
             </StyledComponent>
