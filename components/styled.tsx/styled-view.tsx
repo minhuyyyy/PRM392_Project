@@ -4,15 +4,13 @@ import { SafeAreaView } from 'react-native';
 
 export default function StyledView({
     children,
-    classname,
 }: {
     children: React.ReactNode;
-    classname?: string;
 }) {
     return (
         <StyledComponent
             component={SafeAreaView}
-            className={classname}
+            className='flex-1 justify-center mx-10'
         >
             {children}
         </StyledComponent>

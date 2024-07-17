@@ -8,10 +8,10 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
 
     return (
-        <StyledView classname='flex-1 justify-center mx-10'>
+        <StyledView>
             <StyledText
+                type='title'
                 text='Sign In'
-                classname='font-semibold text-2xl'
             />
             <StyledInput
                 value={email}
@@ -29,8 +29,11 @@ export default function SignIn() {
                     /* Handle sign in */
                 }}
             />
-            <StyledView classname='flex flex-row mt-4 justify-center'>
-                <StyledText text='Don’t have an account?' />
+            <View className='flex flex-row mt-4 justify-center'>
+                <StyledText
+                    type=''
+                    text='Don’t have an account?'
+                />
                 <Link
                     push
                     href={'/(screens)/register'}
@@ -38,7 +41,7 @@ export default function SignIn() {
                 >
                     Register
                 </Link>
-            </StyledView>
+            </View>
         </StyledView>
     );
 }
