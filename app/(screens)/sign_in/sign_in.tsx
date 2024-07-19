@@ -2,11 +2,26 @@ import { Button, View } from 'react-native';
 import React, { useState } from 'react';
 import { StyledInput, StyledText, StyledView } from '@/components/styled.tsx';
 import { Link } from 'expo-router';
+import login from '@/axios/services/auth-services/login';
+import { useNavigation } from '@react-navigation/native';
+import useUser from '@/app/hooks/useUser';
+import { jwtDecode } from 'jwt-decode';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigator = useNavigation();
 
+    const { user, setUser } = useUser();
+    const handleSignIn = async () => {
+        const res = await login(email, password);
+        if (res?.status === 200) {
+            const decoded = jwtDecode(res.data.token);
+            setUser(decoded);
+
+            navigator.navigate('(tabs)');
+        }
+    };
     return (
         <StyledView classname='flex-1 justify-center mx-10'>
             <StyledText
@@ -22,11 +37,12 @@ export default function SignIn() {
                 value={password}
                 placeholder='Enter password'
                 onChangeText={(text: string) => setPassword(text)}
+                secured={true}
             />
             <Button
                 title='Sign In'
                 onPress={() => {
-                    /* Handle sign in */
+                    handleSignIn();
                 }}
             />
             <StyledView classname='flex flex-row mt-4 justify-center'>

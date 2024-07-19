@@ -6,12 +6,14 @@ interface StyledInputProps {
     placeholder: string;
     value: string;
     onChangeText: (text: string) => void;
+    secured?: boolean;
 }
 
 export default function StyledInput({
     placeholder,
     value,
     onChangeText,
+    secured,
 }: StyledInputProps) {
     return (
         <StyledComponent
@@ -20,6 +22,7 @@ export default function StyledInput({
             placeholder={placeholder}
             value={value}
             onChangeText={onChangeText}
+            secureTextEntry={secured}
         />
     );
 }

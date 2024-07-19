@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import { StyledImage, StyledText, StyledView } from '@/components/styled.tsx';
 import { Artwork } from '@/contracts/types/Artwork';
-import { getArtworkById } from '@/axios/services/artwork-services';
+import { getArtworkById } from '@/axios/services/artwork-services/artwork-services';
 import { ScrollView, Button } from 'react-native';
 import {
     addItemToCart,
@@ -11,6 +11,11 @@ import {
 import { useCart } from '@/contexts/cart-context';
 import Layout from '@/components/layout';
 import Loading from '@/components/loading/loading';
+import {
+    registerForPushNotificationsAsync,
+    schedulePushNotification,
+} from '@/helpers/badge-noti/notification-helpers';
+import * as Notifications from 'expo-notifications';
 
 export default function ArtworkDetail() {
     const router = useRouter();
@@ -18,6 +23,10 @@ export default function ArtworkDetail() {
     const [artwork, setArtwork] = useState<Artwork>({});
     const { setCart } = useCart();
     const [loading, setLoading] = useState(true);
+    const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
+    const notificationListener = useRef<Notifications.Subscription>();
+    const responseListener = useRef<Notifications.Subscription>();
+
     useEffect(() => {
         const fetchArtwork = async () => {
             const res = await getArtworkById(Number(id));
@@ -25,6 +34,33 @@ export default function ArtworkDetail() {
             setLoading(false);
         };
         fetchArtwork();
+
+        registerForPushNotificationsAsync().then(
+            (token) => token && setExpoPushToken(token),
+        );
+
+        notificationListener.current =
+            Notifications.addNotificationReceivedListener((notification) => {
+                // console.log('Notification received:', notification);
+            });
+
+        responseListener.current =
+            Notifications.addNotificationResponseReceivedListener(
+                (response) => {
+                    // console.log('Notification response received:', response);
+                },
+            );
+
+        return () => {
+            notificationListener.current &&
+                Notifications.removeNotificationSubscription(
+                    notificationListener.current,
+                );
+            responseListener.current &&
+                Notifications.removeNotificationSubscription(
+                    responseListener.current,
+                );
+        };
     }, []);
 
     const handleAddToCart = async () => {
@@ -32,6 +68,7 @@ export default function ArtworkDetail() {
             await addItemToCart(artwork);
             const cart = await getCart();
             setCart(cart);
+            await schedulePushNotification(artwork.name);
         }
     };
 

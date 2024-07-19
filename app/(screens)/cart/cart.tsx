@@ -1,3 +1,4 @@
+// screens/CartScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { Artwork } from '@/contracts/types/Artwork';
 import { Button, FlatList, StyleSheet } from 'react-native';
@@ -6,20 +7,23 @@ import {
     removeItemFromCart,
 } from '@/helpers/async-storage-helpers/cart-helpers';
 import { getArtworkById } from '@/axios/services/artwork-services';
-import { StyledImage, StyledText, StyledView } from '@/components/styled.tsx';
 import Loading from '@/components/loading/loading';
-import { openLink } from '@/helpers/link-opener/link-opener';
+import { useNavigation } from '@react-navigation/native';
+import StyledView from '@/app/components/StyledView';
+import { StyledImage, StyledText } from '@/components/styled.tsx';
+import useUser from '@/app/hooks/useUser';
 
-export default function Cart() {
+export default function CartScreen() {
     const [products, setProducts] = useState<Artwork[]>([]);
     const [loading, setLoading] = useState(true);
+    const navigator = useNavigation();
+    const { user } = useUser();
 
     useEffect(() => {
         const getCartItems = async () => {
             const items = await getCart();
             const productsData: Artwork[] = [];
 
-            // Fetch artwork details for each item in cart
             for (const itemId of items) {
                 try {
                     const res = await getArtworkById(itemId);
@@ -32,7 +36,6 @@ export default function Cart() {
                 }
             }
 
-            // Update state with fetched products
             setProducts(productsData);
             setLoading(false);
         };
@@ -40,33 +43,36 @@ export default function Cart() {
         getCartItems();
     }, []);
 
-    const renderItem = ({ item }: { item: Artwork }) => {
-        return (
-            <StyledView classname='flex-1 flex-col '>
-                <StyledView classname='flex-1 flex-row bg-white mb-2 items-center justify-around py-4'>
-                    <StyledImage
-                        alt={item.name}
-                        src={item.image}
-                        resizeMode='contain'
-                        classname='w-24 h-24'
-                    />
-                    <StyledText text={item.name} />
-                    <StyledText
-                        text={item.price.toLocaleString('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND',
-                        })}
-                    />
-                    <Button
-                        title='remove'
-                        onPress={async () =>
-                            await removeItemFromCart(item.artworkId)
-                        }
-                    />
-                </StyledView>
-            </StyledView>
+    const handleRemoveItem = async (artworkId: number) => {
+        await removeItemFromCart(artworkId);
+        setProducts((prevProducts) =>
+            prevProducts.filter((item) => item.artworkId !== artworkId),
         );
     };
+
+    const renderItem = ({ item }: { item: Artwork }) => (
+        <StyledView classname='flex-1 flex-col'>
+            <StyledView classname='flex-1 flex-row bg-white mb-2 items-center justify-around py-4'>
+                <StyledImage
+                    alt={item.name}
+                    src={item.image}
+                    resizeMode='contain'
+                    classname='w-24 h-24'
+                />
+                <StyledText text={item.name} />
+                <StyledText
+                    text={item.price.toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                    })}
+                />
+                <Button
+                    title='Remove'
+                    onPress={() => handleRemoveItem(item.artworkId)}
+                />
+            </StyledView>
+        </StyledView>
+    );
 
     return (
         <StyledView classname='flex-1 w-full'>
@@ -81,11 +87,15 @@ export default function Cart() {
                         data={products}
                         numColumns={1}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item.artworkId.toString()} // Adjust as per your artwork ID
+                        keyExtractor={(item) => item.artworkId.toString()}
                     />
                     <Button
                         title='Checkout'
-                        onPress={() => openLink('https://facebook.com')}
+                        onPress={() =>
+                            navigator.navigate('(screens)/checkout', {
+                                products,
+                            })
+                        }
                     />
                 </>
             )}
